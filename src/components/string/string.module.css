@@ -1,0 +1,9 @@
+.box_input {
+    display:flex;
+    width:522px;
+    gap:12px;
+}
+.box_main {
+    display:flex;
+    justify-content: center;
+}
