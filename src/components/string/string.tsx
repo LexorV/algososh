@@ -5,9 +5,14 @@ import { Button } from "../ui/button/button";
 import stringStyle from './string.module.css';
 import { Circle } from '../ui/circle/circle'
 import { ElementStates } from '../../types/element-states';
+type TobjectText = {
+  id: number,
+  text: string,
+  style:any
+}
 export const StringComponent: React.FC = () => {
   const [textInput, setTextInput] = useState<string>('');
-  const [arrText, setArrText] = useState<string[]>([]);
+  const [arrText, setArrText] = useState<TobjectText[]>([]);
   const [leftIndex, setLeft] = useState<number | null>(null)
   const [rightIndex, setRight] = useState<number | null>(null)
   const [started, setStarted] = useState<boolean>(false)
@@ -30,16 +35,19 @@ export const StringComponent: React.FC = () => {
   }*/
 
   const bubbleSort = async (
-    arrText: Array<string>,
+    arrText: Array<TobjectText>,
     setLeft: (n: number) => void,
     setRight: (n: number) => void,
-    setArrText: (arrText: Array<string>) => void,
+    setArrText: (arrText: Array<TobjectText>) => void,
   ) => {
-    const copy = [...arrText]
+    const copy = [...arrText];
+    console.log(copy)
+    
     for (let i = 0; i < copy.length; i++) {
       for (let j = 0; j < copy.length - 1 - i; j++) {
         const right = copy[j + 1]
         const left = copy[j]
+        
         await new Promise<void>((res) => {
           setTimeout(() => {
             res()
@@ -47,10 +55,16 @@ export const StringComponent: React.FC = () => {
         })
         setLeft(j)
         setRight(j + 1)
-        if (left > right) {
+        right.style = ElementStates.Modified
+        
+        if (left.text > right.text) {
+          right.style = ElementStates.Changing
           const x = copy[j]
           copy[j] = copy[j + 1]
           copy[j + 1] = x
+        }
+        if(copy.length<=1) {
+          left.style = ElementStates.Modified
         }
         setArrText(copy)
       }
@@ -66,7 +80,15 @@ export const StringComponent: React.FC = () => {
   const onChangeForm = (e: SyntheticEvent) => {
     e.preventDefault();
     let textInputArr = textInput.split('');
-    setArrText(textInputArr);
+    const arrObjText = textInputArr.map((el, index) => {
+      return {
+        id:index,
+        text:el,
+        style:ElementStates.Default
+      }
+
+    })
+    setArrText(arrObjText);
   }
  
   useEffect(() => {
@@ -106,7 +128,7 @@ export const StringComponent: React.FC = () => {
           {arrText.map((list, index) => { 
           return  (
           <li key={uid()} >
-            <Circle index={index} state={ElementStates.Changing} letter={list} />
+            <Circle index={index} state={list.style} letter={list.text} />
           </li>)})}
         </ul>
       </div>
