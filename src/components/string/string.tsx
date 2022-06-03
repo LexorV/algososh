@@ -1,11 +1,11 @@
-import React, { useState, ChangeEvent, SyntheticEvent, useRef, useEffect, useLayoutEffect } from "react";
+import React, { useState, ChangeEvent, SyntheticEvent, useEffect} from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import stringStyle from './string.module.css';
-import { Circle } from '../ui/circle/circle'
+import { Circle } from '../ui/circle/circle';
 import { ElementStates } from '../../types/element-states';
-import { start } from "repl";
+import {uid} from '../../helper/helper';
 type TobjectText = {
   id: number,
   text: string,
@@ -20,7 +20,6 @@ export const StringComponent: React.FC = () => {
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value);
   }
-  const uid = () => Date.now().toString(36) + Math.random().toString(36);
   const stringSort = async (
     arrText: Array<TobjectText>,
     setLeft: (n: number) => void,
@@ -78,7 +77,6 @@ export const StringComponent: React.FC = () => {
         text:el,
         style:ElementStates.Default
       }
-
     })
     setArrText(arrObjText);
   }
