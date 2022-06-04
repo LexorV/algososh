@@ -14,16 +14,14 @@ type TobjectText = {
 export const StringComponent: React.FC = () => {
   const [textInput, setTextInput] = useState<string>('');
   const [arrText, setArrText] = useState<TobjectText[]>([]);
-  const [leftIndex, setLeft] = useState<number | null>(null)
-  const [rightIndex, setRight] = useState<number | null>(null)
+  const [hightIndex, setHight] = useState<number | null>(null)
   const [started, setStarted] = useState<boolean>(false)
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value);
   }
   const stringSort = async (
     arrText: Array<TobjectText>,
-    setLeft: (n: number) => void,
-    setRight: (n: number) => void,
+    setHight: (n: number) => void,
     setArrText: (arrText: Array<TobjectText>) => void,
   ) => {
     const copy = [...arrText];
@@ -43,8 +41,7 @@ export const StringComponent: React.FC = () => {
             res()
           }, 1000)
         })
-        setLeft(low)
-        setRight(hight)
+        setHight(hight)
         copy[low].style = ElementStates.Modified
         copy[hight].style = ElementStates.Modified
         const x = copy[low]
@@ -63,10 +60,9 @@ export const StringComponent: React.FC = () => {
   }
   const startAlgo = async () => {
     setStarted(true)
-    await stringSort(arrText, setLeft, setRight, setArrText)
+    await stringSort(arrText, setHight, setArrText)
     setStarted(false)
-    setLeft(null)
-    setRight(null)
+    setHight(null)
   }
   const onChangeForm = (e: SyntheticEvent) => {
     e.preventDefault();

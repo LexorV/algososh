@@ -12,4 +12,6 @@
     list-style-type: none;
     display: flex;
     gap: 16px;
+    flex-wrap:wrap;
+    max-width:944px;
 }
