@@ -3,6 +3,7 @@ max-width:924px;
 display: flex;
 justify-content:center;
 align-items:center;
+margin-bottom: 48px;
 }
 .main {
     display: flex;
@@ -16,6 +17,7 @@ align-items:center;
     display: flex;
     flex-direction:row;
     gap: 10px;
+    align-items:end;
 }
 .list_diogram {
 width:50px;
