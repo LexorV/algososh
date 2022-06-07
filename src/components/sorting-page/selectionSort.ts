@@ -1,14 +1,11 @@
-import {ElementStates} from '../../types/element-states';
+import { ElementStates } from '../../types/element-states';
 import { Direction } from "../../types/direction";
-type TobjectText = {
-    number: number,
-    style:ElementStates
-  }
+import {TobjectText} from '../../types/sorting-page';
 export const selectionSort = async (
     arr: Array<TobjectText>,
     setindexSort: (n: number) => void,
-    setArray: (arr:TobjectText[]) => void,
-    direction:Direction
+    setArray: (arr: TobjectText[]) => void,
+    direction: Direction
 ) => {
     const copy = [...arr]
     let minIdx: number;
@@ -23,20 +20,20 @@ export const selectionSort = async (
             copy[minIdx].style = ElementStates.Changing
             setindexSort(copy[j].number)
             copy[j].style = ElementStates.Changing
-            if(direction === Direction.Ascending) {
-            if (copy[j].number < copy[minIdx].number) {
-               copy[minIdx].style = ElementStates.Default
-                minIdx = j;
+            if (direction === Direction.Ascending) {
+                if (copy[j].number < copy[minIdx].number) {
+                    copy[minIdx].style = ElementStates.Default
+                    minIdx = j;
+                }
             }
-        }
-        else {
-            if (copy[j].number > copy[minIdx].number) {
-                copy[minIdx].style = ElementStates.Default
-                 minIdx = j;
-             }
+            else {
+                if (copy[j].number > copy[minIdx].number) {
+                    copy[minIdx].style = ElementStates.Default
+                    minIdx = j;
+                }
 
-        }
-            if(j > 1) {
+            }
+            if (j > 1) {
                 copy[j - 1].style = ElementStates.Default
             }
         }
@@ -45,13 +42,13 @@ export const selectionSort = async (
         copy[i] = copy[minIdx];
         copy[minIdx] = temp;
         await new Promise<void>((res) =>
-                setTimeout(() => {
-                    res()
-                }, 1000)
-            )
-            setindexSort(copy[i].number)
+            setTimeout(() => {
+                res()
+            }, 1000)
+        )
+        setindexSort(copy[i].number)
         copy[copy.length - 1].style = ElementStates.Default
-        if(i == copy.length - 1) {
+        if (i == copy.length - 1) {
             copy[copy.length - 1].style = ElementStates.Modified
         }
 

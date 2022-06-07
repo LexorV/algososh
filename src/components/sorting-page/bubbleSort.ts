@@ -1,14 +1,12 @@
-import {ElementStates} from '../../types/element-states'
+import { ElementStates } from '../../types/element-states';
 import { Direction } from "../../types/direction";
-type TobjectText = {
-    number: number,
-    style:ElementStates
-  }
+import { TobjectText } from '../../types/sorting-page';
+
 export const bubbleSort = async (
     arr: Array<TobjectText>,
     indexSort: (n: number) => void,
-    setArray: (arr:TobjectText[]) => void,
-    direction:Direction
+    setArray: (arr: TobjectText[]) => void,
+    direction: Direction
 
 ) => {
     const copy = [...arr]
@@ -20,15 +18,15 @@ export const bubbleSort = async (
                 setTimeout(() => {
                     res()
                 }, 1000)
-            },)
-            if(j >= 1) {
-                const left2 =  copy[j - 1]
+            })
+            if (j >= 1) {
+                const left2 = copy[j - 1]
                 left2.style = ElementStates.Default
             }
             right.style = ElementStates.Changing;
             left.style = ElementStates.Changing;
             indexSort(j)
-            if(direction === Direction.Ascending) {
+            if (direction === Direction.Ascending) {
                 if (left.number < right.number) {
                     const x = copy[j]
                     copy[j] = copy[j + 1]
@@ -36,17 +34,17 @@ export const bubbleSort = async (
                 }
             }
             else {
-                    if (left.number > right.number) {
-                        const x = copy[j]
-                        copy[j] = copy[j + 1]
-                        copy[j + 1] = x
-                    }
+                if (left.number > right.number) {
+                    const x = copy[j]
+                    copy[j] = copy[j + 1]
+                    copy[j + 1] = x
+                }
             }
             if (j === copy.length - i - 2) {
                 copy[copy.length - i - 1].style = ElementStates.Modified
                 copy[copy.length - i - 2].style = ElementStates.Default
             }
-            if(copy.length - i - 2 == 0) {
+            if (copy.length - i - 2 == 0) {
                 copy[0].style = ElementStates.Modified
             }
             setArray(copy)
