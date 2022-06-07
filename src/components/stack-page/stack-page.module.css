@@ -1,6 +1,6 @@
 .box_input {
     display:flex;
-    width:522px;
+    width:829px;
     gap:12px;
 }
 .box_main {
@@ -12,4 +12,5 @@
     list-style-type: none;
     display: flex;
     gap: 16px;
+
 }
