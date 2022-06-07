@@ -1,44 +1,32 @@
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import React, { useState, ChangeEvent, SyntheticEvent, useEffect } from "react";
 import { Button } from "../ui/button/button";
-import { randomNumber, swap } from '../../helper/helper';
+import { randomNumber} from '../../helper/helper';
 import sortingStyle from './sorting-page.module.css'
 import { RadioInput } from '../ui/radio-input/radio-input';
 import { Direction } from "../../types/direction";
 import { Column } from "../ui/column/column"
 import { nanoid } from "nanoid";
-import {bubbleSort} from './bubbleSort'
-import {ElementStates} from '../../types/element-states'
+import {bubbleSort} from './bubbleSort';
+import {ElementStates} from '../../types/element-states';
+import {selectionSort} from './selectionSort'
 type TobjectText = {
   number: number,
   style:ElementStates
 }
 
 export const SortingPage: React.FC = () => {
-const [left, setLeft] = useState<number | null>(null);
-const [right, setRight] = useState<number | null>(null);
+const [indexSort, setindexSort] = useState<number | null>(null);
 const [started, setStarted] = useState<boolean>(false);
+const [direction, setDiraction] = useState(Direction.Ascending)
 
   const [diogrammArr, setDiogrammArr] = useState<TobjectText[]>([]);
-  const selectionSort = (arr: number[]) => {
-    const { length } = arr;
-    for (let i = 0; i < length - 1; i++) {
-      let maxInd = i;
-      for (let j = i + 1; j < length; j++) {
-              if (arr[maxInd] < arr[j]) {
-                  maxInd = j;
-            }
-            }
-            swap(arr, i, maxInd )
-          }
-          return arr
-        };
+  
     const startAlgo = async () => {
     setStarted(true)
-    await bubbleSort(diogrammArr, setLeft, setRight, setDiogrammArr)
+    await selectionSort(diogrammArr, setindexSort, setDiogrammArr, direction)
+    //await bubbleSort(diogrammArr, setindexSort, setDiogrammArr, direction)
     setStarted(false)
-    setLeft(null)
-    setRight(null)
   }
   const newArr = () => {
     let arrRandom =  randomArr()
@@ -63,6 +51,11 @@ const [started, setStarted] = useState<boolean>(false);
     return arr
   }
    const ascendingSort = () => {
+    setDiraction(Direction.Ascending)
+    startAlgo()
+   }
+   const descendingSort = () => {
+    setDiraction(Direction.Descending)
     startAlgo()
    }
   useEffect(() => {
@@ -90,6 +83,7 @@ const [started, setStarted] = useState<boolean>(false);
           <Button
             sorting={Direction.Descending}
             extraClass={'mr-40'}
+            onClick={descendingSort}
             text="По убыванию" />
           <Button
             onClick={newArrClick}
@@ -103,7 +97,6 @@ const [started, setStarted] = useState<boolean>(false);
                 index={el.number}
                 state = {el.style}
                 />
-                
             )
           })}
         </div>
