@@ -17,9 +17,10 @@ export const StackPage: React.FC = () => {
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value);
   }
+  const algoStack = new Stack(arrStack, setArrStack)
   const addEl = () => {
     algoStack.push(textInput, setStartFunc, setColorState);
-    setTextInput('')
+    algoStack.clear(setTextInput)
   }
   useEffect(() => {
     if (textInput === '') {
@@ -42,7 +43,6 @@ export const StackPage: React.FC = () => {
       return ElementStates.Default
     }
   }
-  const algoStack = new Stack(arrStack, setArrStack)
   useEffect(() => {
     setStartFunc(false)
   }, [startFunc]);

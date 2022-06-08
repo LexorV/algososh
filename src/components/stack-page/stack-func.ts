@@ -8,6 +8,9 @@ interface IStack<T> {
         setStart: React.Dispatch<React.SetStateAction<boolean>>,
         setterColor: React.Dispatch<React.SetStateAction<boolean>>
     ) => void;
+    clear(
+        setfield:React.Dispatch<React.SetStateAction<string>>
+    ): void;
     getSize: () => number;
     getElements: () => string[];
 }
@@ -52,6 +55,11 @@ export class Stack<T> implements IStack<T> {
         this.setArrStack(this.arrStack)
         setterColor(false)
     };
+    clear = (
+    setfield:React.Dispatch<React.SetStateAction<string>>)=>
+    {
+        setfield('')
+    }
     getSize = () => this.arrStack.length;
     getElements = () => this.arrStack;
 }
