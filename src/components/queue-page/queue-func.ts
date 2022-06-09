@@ -7,12 +7,14 @@ interface IQueue<T> {
         setQueueArray:  React.Dispatch<React.SetStateAction<TobjectText[]>>,
         queueArray: TobjectText[],
         colorState: React.Dispatch<React.SetStateAction<boolean>>,
-        setIsMaxArr:React.Dispatch<React.SetStateAction<boolean>>
+        setIsMaxArr:React.Dispatch<React.SetStateAction<boolean>>,
+        setIsMinArr:React.Dispatch<React.SetStateAction<boolean>>
     ) => void;
     dequeue:(
         setQueueArray: React.Dispatch<React.SetStateAction<TobjectText[]>>,
         queueArray: TobjectText[],
-        colorState: React.Dispatch<React.SetStateAction<boolean>>
+        colorState: React.Dispatch<React.SetStateAction<boolean>>,
+        setIsMinArr:React.Dispatch<React.SetStateAction<boolean>>
     ) => void;
     getElements: () => TobjectText[];
     clear: () => void;
@@ -31,12 +33,13 @@ export class Queue<T> implements IQueue<T> {
         setQueueArray: React.Dispatch<React.SetStateAction<TobjectText[]>>,
         queueArray: TobjectText[],
         colorState: React.Dispatch<React.SetStateAction<boolean>>,
-        setIsMaxArr: React.Dispatch<React.SetStateAction<boolean>>
+        setIsMaxArr: React.Dispatch<React.SetStateAction<boolean>>,
+        setIsMinArr:React.Dispatch<React.SetStateAction<boolean>>
     ) => {
         this.arrObj = [...queueArray];
-        if (this.length >= this.size || this.tail > this.size) {
+        if (this.length >= this.size || this.tail + 1 >= this.size) {
             setIsMaxArr(true)
-            throw new Error("Maximum length exceeded");
+          // this  throw new Error("Maximum length exceeded");
         }
         if (this.tail === this.size && this.tail <= this.size) {
             this.arrObj[this.tail].tail = '';
@@ -56,25 +59,32 @@ export class Queue<T> implements IQueue<T> {
             this.arrObj[this.tail - 1].tail = ''
         }
         if (this.head == 0) {
+            setIsMinArr(false)
             this.arrObj[this.head].head = 'head';
         }
+        if(this.length > 0) {
+            setIsMinArr(false)
+        }
+
         setQueueArray(this.arrObj)
         this.length++;
         this.tail++;
     };
     dequeue = async (setQueueArray: any,
         queueArray: TobjectText[],
-        colorState:  React.Dispatch<React.SetStateAction<boolean>>
+        colorState:  React.Dispatch<React.SetStateAction<boolean>>,
+        setIsMinArr:React.Dispatch<React.SetStateAction<boolean>>
     ) => {
-        if (this.isEmpty()) {
-            throw new Error("No elements in the queue");
-        }
         if (this.head === this.size) {
             this.head = 0;
         }
         this.arrObj = [...queueArray];
         this.head++
         this.length--;
+        if (this.isEmpty()) {
+            setIsMinArr(true)
+           // throw new Error("No elements in the queue");
+        }
         colorState(true)
         this.arrObj[this.head - 1].style = ElementStates.Changing;
         await new Promise<void>((res) => {
