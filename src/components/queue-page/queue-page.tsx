@@ -6,26 +6,52 @@ import { Circle } from '../ui/circle/circle';
 import { nanoid } from "nanoid";
 import { ElementStates } from '../../types/element-states';
 import queueStyle from './queue-page.module.css';
+import {TobjectText} from '../../types';
+import {Queue} from './queue-func';
 const generatArray = () => {
   const arr = []
 for(let i = 0; i < 7; i++) {
-  arr.push('')
+  arr.push(
+    {
+      id:i,
+      text:'',
+      style:ElementStates.Default,
+      head:'',
+      tail:''
+    }
+  )
 }
 return arr
 }
-
+const algoQueue = new Queue(7);
 export const QueuePage: React.FC = () => {
   const [textInput, setTextInput] = useState<string>('');
   const [pushedClick, setPushedClick] = useState<boolean>(true);
-  const [startFunc, setStartFunc] = useState<boolean>(false);
-  const [popClick, setPopClick] = useState<boolean>(false);
-  const [arrStack, setArrStack] = useState<string[]>(generatArray());
+  const [isMaxArr, setIsMaxArr] = useState<boolean>(false);
+  const [isMinArr, setIsMinArr] = useState<boolean>(true)
+  const [ queueArray, setQueueArray] = useState<TobjectText[]>(generatArray());
   const [colorState, setColorState] = useState<boolean>(false);
+  const [isClear, setIsClear] = useState<boolean>(true)
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value);
   }
+  const clearArr = () => {
+    setQueueArray(generatArray())
+    algoQueue.clear()
+    setIsClear(true)
+    setIsMaxArr(false)
+  }
+  useEffect(() => {
+  }, [])
   const addEl = () => {
-    console.log('edd')
+    algoQueue.enqueue(textInput,
+       setQueueArray, 
+       queueArray, 
+       setColorState,
+       setIsMaxArr
+       )
+    setIsClear(false)
+    setTextInput('')
   }
   useEffect(() => {
     if (textInput === '') {
@@ -44,35 +70,37 @@ export const QueuePage: React.FC = () => {
             value={textInput}
             onChange={onFormChange} />
           <Button
-            disabled={pushedClick}
+            disabled={isMaxArr}
             text='Добавить'
             onClick={addEl}
           />
           <Button
-            disabled={popClick}
+            disabled={isMinArr}
             text='Удалить'
             extraClass={'mr-40'}
             onClick={
-              () => console.log('test')
+              () => algoQueue.dequeue(
+                setQueueArray,
+                 queueArray,
+                  setColorState)
             }
           />
           <Button
-            disabled={popClick}
+            disabled={isClear}
             text='Очистить'
-            onClick={
-              () => setArrStack([])
-            }
+            onClick={clearArr}
           />
         </div>
         <ul className={queueStyle.lists_circle}>
-          {arrStack.map((list, index) => {
+          {queueArray.map((list, index) => {
             return (
               <li key={nanoid()} >
                 <Circle
-                  head={arrStack.length - 1 === index ? 'top' : ''}
+                  head={list.head}
                   index={index}
-                  letter={list}
-                  state={ElementStates.Default}
+                  letter={list.text}
+                  state={list.style}
+                  tail={list.tail}
                 />
               </li>)
           })}

@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, SyntheticEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
