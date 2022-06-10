@@ -11,11 +11,18 @@
 .lists_circle {
     list-style-type: none;
     display: flex;
-    gap: 16px;
+    gap: 25px;
 }
 .input_field_size {
     width:204px;
 }
 .button_size {
     width:175px;
+}
+.list {
+    display:flex;
+    align-items: center;
+    gap: 25px;
+
+
 }
