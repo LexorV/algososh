@@ -1,8 +1,7 @@
 .box_input {
     display:flex;
-    width:829px;
+    width:952px;
     gap:12px;
-    margin-bottom:48px;
 }
 .box_main {
     display:flex;
@@ -13,5 +12,10 @@
     list-style-type: none;
     display: flex;
     gap: 16px;
-
+}
+.input_field_size {
+    width:204px;
+}
+.button_size {
+    width:175px;
 }
