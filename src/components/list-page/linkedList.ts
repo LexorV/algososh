@@ -1,3 +1,4 @@
+import {pause} from '../../helper/helper'
 export class Node<T> {
     value: T
     next: Node<T> | null
@@ -6,6 +7,7 @@ export class Node<T> {
         this.next = (next === undefined ? null : next);
     }
 }
+import { ElementStates } from '../../types/element-states';
 
 interface ILinkedList<T> {
     append: (element: T) => void;
@@ -22,14 +24,21 @@ export class LinkedList<T> implements ILinkedList<T> {
     private head: Node<T> | null;
     private size: number;
     private tail: Node<T> | null;;
-    arr: any;
+    arr:any;
     setArr: any;
-    constructor(arr: any, setArr: any) {
+    setChange:any;
+    setStarted:any;
+    constructor(arr: any,
+         setArr: any,
+         setChange:any, 
+          setStarted:any) {
         this.arr = arr;
         this.head = null;
         this.size = 0;
         this.tail = null;
-        this.setArr = setArr
+        this.setArr = setArr;
+        this.setChange = setChange;
+        this.setStarted = setStarted;
     }
 
     addByIndex(element: T, index: number) {
@@ -84,7 +93,7 @@ export class LinkedList<T> implements ILinkedList<T> {
             this.tail = null;
         }
 
-        return deletedHead;
+        return this;
     }
     deleteTail() {
         const deletedTail = this.tail;
@@ -103,7 +112,7 @@ export class LinkedList<T> implements ILinkedList<T> {
         }
 
         this.tail = current;
-        return deletedTail;
+        return this;
     }
 
     prepend(element: T) {
@@ -118,7 +127,7 @@ export class LinkedList<T> implements ILinkedList<T> {
         this.size++
         return this
     }
-    append(element: T) {
+    append = async(element: any) => {
         const node = new Node(element, this.head);
         this.head = node;
         if (!this.tail) {
@@ -127,7 +136,7 @@ export class LinkedList<T> implements ILinkedList<T> {
         this.size++
         return this
     }
-    toArray() {
+    toArray = () => {
         const nodes = [];
         let currentNode = this.head;
         while (currentNode) {

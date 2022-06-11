@@ -9,16 +9,18 @@ import listStyle from './list-page.module.css';
 import {ArrowIcon} from '../ui/icons/arrow-icon';
 import  { TobjectText } from '../../types';
 import {LinkedList } from './linkedList';
+import {pause} from '../../helper/helper'
 
 export const ListPage: React.FC = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [textInput, setTextInput] = useState<string>('');
   const [indexInput, setIndexInput] = useState<number>()
   const [listArray, setListArray] = useState<any[]>([]);
+  const [stateChange, setChange] = useState<boolean>(false);
   const ref = useRef<any>(null);
   function LinkedListAdd() {
     if (ref.current === null) {
-      ref.current = new LinkedList(listArray, setListArray);
+      ref.current = new LinkedList(listArray, setListArray, setChange, setStarted);
     }
     return ref.current;
   }
@@ -28,8 +30,8 @@ export const ListPage: React.FC = () => {
       linkedList.append({
         text: String(Math.floor(Math.random() * (99 - 1)) + 1),
         style: ElementStates.Default,
-        head: '',
-        tail: ''
+        head: i == 3 ? 'head':'',
+        tail: i == 0 ? 'tail':''
       })
     }
     setListArray(linkedList.toArray())
@@ -43,25 +45,95 @@ export const ListPage: React.FC = () => {
   const onFormindexChange = (e: ChangeEvent<HTMLInputElement>) => {
     setIndexInput(parseInt(e.target.value));
   }
-
-  const addEl = () => {
+const headCircleChange =  async() => {
+  linkedList.head.value.head = <Circle
+  letter={textInput}
+  state={ElementStates.Changing}
+  isSmall={true}
+/>
+}
+const headColorChange = async() => {
+  linkedList.head.value.head = 'head';
+  linkedList.head.next.value.head = '';
+  setChange(true)
+  linkedList.head.value.style = ElementStates.Modified
+  await new Promise<void>((res) => {
+    setTimeout(() => {
+        res()
+    }, 1000)
+});
+linkedList.head.value.style = ElementStates.Default
+setChange(false)
+}
+  const addElHead = async() => {
+    setStarted(true)
+    headCircleChange()
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+          res()
+      }, 1000)
+  });
     linkedList.append({
       text: textInput,
       style: ElementStates.Default,
       head: '',
       tail: ''
     })
+    headColorChange()
     setListArray(linkedList.toArray())
+    setStarted(false)
   }
-  const addEl1 = () => {
+  const tailColorChange = async() => {
+    console.log( linkedList.tail)
+    linkedList.tail.value.tail = '';
+    setChange(true)
+    linkedList.tail.value.style = ElementStates.Modified
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+          res()
+      }, 1000)
+  });
+  linkedList.tail.value.style = ElementStates.Default
+setChange(false)
+}
+  const tailCircleChange =  async() => {
+    setChange(true)
+    linkedList.tail.value.tail = <Circle
+    letter={textInput}
+    state={ElementStates.Changing}
+    isSmall={true}
+  />
+  await new Promise<void>((res) => {
+    setTimeout(() => {
+        res()
+    }, 1000)
+});
+linkedList.tail.value.tail = ''
+setChange(false)
+  }
+
+
+
+  const addElTail = async() => {
+    setStarted(true)
+    tailCircleChange()
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+          res()
+      }, 1000)
+  });
+ 
     linkedList.prepend({
       text: textInput,
-      style: ElementStates.Default,
+      style: ElementStates.Modified,
       head: '',
-      tail: ''
+      tail: 'tail'
     })
-    console.log(linkedList)
+    tailColorChange()
+
+
     setListArray(linkedList.toArray())
+    setStarted(false)
   }
   const deleteHead = () => {
     linkedList.deleteHead()
@@ -71,7 +143,7 @@ export const ListPage: React.FC = () => {
     linkedList.deleteTail();
     setListArray(linkedList.toArray())
   }
-  const addElIndex = () => {
+  const addByIndex = () => {
     linkedList.addByIndex({
       text: textInput,
       style: ElementStates.Default,
@@ -80,7 +152,7 @@ export const ListPage: React.FC = () => {
     }, indexInput)
     setListArray(linkedList.toArray())
   }
-  const dellElIndex  = () => {
+  const deleteByIndex  = () => {
     linkedList.deleteByIndex(indexInput);
     setListArray(linkedList.toArray())
   }
@@ -100,14 +172,14 @@ export const ListPage: React.FC = () => {
             text='Добавить в head'
             linkedList='big'
             extraClass={listStyle.button_size}
-            onClick={addEl}
+            onClick={addElHead}
           />
           <Button
             disabled={started}
             text='Добавить в tail'
             linkedList='big'
             extraClass={listStyle.button_size}
-            onClick={addEl1}
+            onClick={addElTail}
           />
           <Button
             disabled={started}
@@ -136,14 +208,14 @@ export const ListPage: React.FC = () => {
           <Button
             disabled={started}
             text='Добавить  по индексу'
-            onClick={addElIndex}
+            onClick={addByIndex}
             linkedList='big'
           />
           <Button
             disabled={started}
             text='Удалить по индексу'
             linkedList='big'
-            onClick={dellElIndex}
+            onClick={deleteByIndex}
           />
         </div>
         <ul className={listStyle.lists_circle}>
