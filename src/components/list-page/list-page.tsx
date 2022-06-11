@@ -93,7 +93,8 @@ setChange(false)
           res()
       }, 1000)
   });
-  linkedList.tail.value.style = ElementStates.Default
+  linkedList.tail.value.style = ElementStates.Default;
+  linkedList.tail.value.tail = 'tail'
 setChange(false)
 }
   const tailCircleChange =  async() => {
@@ -111,9 +112,6 @@ setChange(false)
 linkedList.tail.value.tail = ''
 setChange(false)
   }
-
-
-
   const addElTail = async() => {
     setStarted(true)
     tailCircleChange()
@@ -122,7 +120,6 @@ setChange(false)
           res()
       }, 1000)
   });
- 
     linkedList.prepend({
       text: textInput,
       style: ElementStates.Modified,
@@ -130,18 +127,58 @@ setChange(false)
       tail: 'tail'
     })
     tailColorChange()
-
-
     setListArray(linkedList.toArray())
     setStarted(false)
   }
-  const deleteHead = () => {
+  const animDeleteHead = async() => {
+    setChange(true)
+    linkedList.head.next.value.head = 'head';
+    let text = linkedList.head.value.text
+    linkedList.head.value.head = <Circle
+    letter={text}
+    state={ElementStates.Changing}
+    isSmall={true}
+  />
+  linkedList.head.value.text = '';
+  setChange(false)
+
+  }
+  const deleteHead = async() => {
+    setStarted(true)
+    animDeleteHead()
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+          res()
+      }, 1000)
+  });
     linkedList.deleteHead()
     setListArray(linkedList.toArray())
+    setStarted(false)
   }
-  const deleteTail = () => {
+const animDeleteTail = async() => {
+  setChange(true)
+  let text = linkedList.tail.value.text
+  linkedList.tail.value.tail = <Circle
+  letter={text}
+  state={ElementStates.Changing}
+  isSmall={true}
+/>
+linkedList.tail.value.text = '';
+setChange(false)
+
+}
+  const deleteTail = async() => {
+    setStarted(true)
+    animDeleteTail()
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+          res()
+      }, 1000)
+  });
     linkedList.deleteTail();
+    linkedList.tail.value.tail = 'tail'
     setListArray(linkedList.toArray())
+    setStarted(false)
   }
   const addByIndex = () => {
     linkedList.addByIndex({
@@ -150,7 +187,7 @@ setChange(false)
       head: '',
       tail: ''
     }, indexInput)
-    setListArray(linkedList.toArray())
+    setListArray(linkedList.toArray());
   }
   const deleteByIndex  = () => {
     linkedList.deleteByIndex(indexInput);
