@@ -1,5 +1,5 @@
-import { pause } from '../../helper/helper';
-import { Circle } from '../ui/circle/circle';
+import {ReactElement} from "react";
+
 export class Node<T> {
     value: T
     next: Node<T> | null
@@ -13,12 +13,14 @@ import { ElementStates } from '../../types/element-states';
 interface ILinkedList<T> {
     append: (element: T) => void;
     getSize: () => number;
-    toArray: any;
-    prepend: any;
-    addByIndex: any;
-    deleteByIndex: any;
-    deleteHead: any;
-    deleteTail: any;
+    toArray: () => void;
+    prepend: (element: T) => void
+    addByIndex: (element:T, index: number, al:ReactElement) => void;
+    deleteByIndex: (
+        index:number,
+        cicleCallback: (text:string | number) => ReactElement) => void;
+    deleteHead: () => void;
+    deleteTail: () => void;
 }
 export class LinkedList<T> implements ILinkedList<T> {
     private head: any;
@@ -41,7 +43,7 @@ export class LinkedList<T> implements ILinkedList<T> {
         this.setStarted = setStarted;
     }
 
-    addByIndex = async (element: T, index: number, al: any) => {
+    addByIndex = async (element: T, index: number, al: ReactElement) => {
         if (index < 0 || index > this.size) {
             console.log('Enter a valid index');
             return;
@@ -123,7 +125,7 @@ export class LinkedList<T> implements ILinkedList<T> {
             currentNode = currentNode.next;
         }
     }
-    deleteByIndex = async (index: number, cicleCallback: any) => {
+    deleteByIndex = async (index: number, cicleCallback: (text:string | number) => ReactElement) => {
         if (index >= this.size) {
             throw new Error("error size");
         }
@@ -188,7 +190,6 @@ export class LinkedList<T> implements ILinkedList<T> {
     }
     deleteHead() {
         if (!this.head) return null;
-        let deletedHead = this.head;
 
         if (this.head.next) {
             this.head = this.head.next;

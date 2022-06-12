@@ -26,7 +26,7 @@ export const ListPage: React.FC = () => {
   const ref = useRef<any>(null);
   function LinkedListAdd() {
     if (ref.current === null) {
-      ref.current = new LinkedList(listArray, setListArray, setChange, setStarted);
+      ref.current = new LinkedList<TobjectText>(listArray, setListArray, setChange, setStarted);
     }
     return ref.current;
   }
