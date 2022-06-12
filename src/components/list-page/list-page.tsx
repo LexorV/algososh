@@ -9,14 +9,20 @@ import listStyle from './list-page.module.css';
 import {ArrowIcon} from '../ui/icons/arrow-icon';
 import  { TobjectText } from '../../types';
 import {LinkedList } from './linkedList';
-import {pause} from '../../helper/helper'
-
+import {pause} from '../../helper/helper';
 export const ListPage: React.FC = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [textInput, setTextInput] = useState<string>('');
-  const [indexInput, setIndexInput] = useState<number>()
+  const [indexInput, setIndexInput] = useState<number>(0)
   const [listArray, setListArray] = useState<any[]>([]);
   const [stateChange, setChange] = useState<boolean>(false);
+  const [btnAddHead, setbtnAddHead] = useState<boolean>(false);
+  const [btnAddTail, setbtnAddTail] = useState<boolean>(false);
+  const [btnDellTail, setbtnDellTail] = useState<boolean>(false);
+  const [btnDellHead, setBtnDellHead] = useState<boolean>(false);
+  const [btnAddByIndex, setBtnAddByIndex] = useState<boolean>(false);
+  const [btnDellByIndex, setDellAddByIndex] = useState<boolean>(false);
+
   const ref = useRef<any>(null);
   function LinkedListAdd() {
     if (ref.current === null) {
@@ -67,6 +73,7 @@ setChange(false)
 }
   const addElHead = async() => {
     setStarted(true)
+    setbtnAddHead(true)
     headCircleChange()
     await new Promise<void>((res) => {
       setTimeout(() => {
@@ -82,9 +89,10 @@ setChange(false)
     headColorChange()
     setListArray(linkedList.toArray())
     setStarted(false)
+    setTextInput('')
+    setbtnAddHead(false)
   }
   const tailColorChange = async() => {
-    console.log( linkedList.tail)
     linkedList.tail.value.tail = '';
     setChange(true)
     linkedList.tail.value.style = ElementStates.Modified
@@ -113,6 +121,7 @@ linkedList.tail.value.tail = ''
 setChange(false)
   }
   const addElTail = async() => {
+    setbtnAddTail(true)
     setStarted(true)
     tailCircleChange()
     await new Promise<void>((res) => {
@@ -129,6 +138,8 @@ setChange(false)
     tailColorChange()
     setListArray(linkedList.toArray())
     setStarted(false)
+    setTextInput('')
+    setbtnAddTail(false)
   }
   const animDeleteHead = async() => {
     setChange(true)
@@ -144,6 +155,7 @@ setChange(false)
 
   }
   const deleteHead = async() => {
+    setBtnDellHead(true)
     setStarted(true)
     animDeleteHead()
     await new Promise<void>((res) => {
@@ -165,8 +177,10 @@ const animDeleteTail = async() => {
 />
 linkedList.tail.value.text = '';
 setChange(false)
+setBtnDellHead(false)
 }
   const deleteTail = async() => {
+    setbtnDellTail(true)
     setStarted(true)
     animDeleteTail()
     await new Promise<void>((res) => {
@@ -178,8 +192,11 @@ setChange(false)
     linkedList.tail.value.tail = 'tail'
     setListArray(linkedList.toArray())
     setStarted(false)
+    setbtnDellTail(false)
   }
+
   const addByIndex = async() => {
+    setBtnAddByIndex(true)
     setStarted(true)
     await linkedList.addByIndex({
       text: textInput,
@@ -192,14 +209,27 @@ setChange(false)
     state={ElementStates.Changing}
     isSmall={true}
   />))
-    console.log(linkedList.head)
     setStarted(false)
     setListArray(linkedList.toArray());
+    setBtnAddByIndex(false)
   }
-  const deleteByIndex  = () => {
-    linkedList.deleteByIndex(indexInput);
+  const cicleCallback = (data:any) => {
+    return (
+      <Circle
+      letter={data}
+      state={ElementStates.Changing}
+      isSmall={true}
+    />)
+  }
+  const deleteByIndex  = async() => {
+    setStarted(true)
+    setDellAddByIndex(true)
+    await linkedList.deleteByIndex(indexInput, cicleCallback);
     setListArray(linkedList.toArray())
+    setStarted(false)
+    setDellAddByIndex(false)
   }
+
 
   return (
     <SolutionLayout title="Связный список">
@@ -213,6 +243,7 @@ setChange(false)
             />
           <Button
             disabled={started}
+            isLoader = {btnAddHead}
             text='Добавить в head'
             linkedList='big'
             extraClass={listStyle.button_size}
@@ -220,6 +251,7 @@ setChange(false)
           />
           <Button
             disabled={started}
+            isLoader={btnAddTail}
             text='Добавить в tail'
             linkedList='big'
             extraClass={listStyle.button_size}
@@ -227,6 +259,7 @@ setChange(false)
           />
           <Button
             disabled={started}
+            isLoader={btnDellHead}
             text='Удалить из head'
             linkedList='big'
             extraClass={listStyle.button_size}
@@ -234,6 +267,7 @@ setChange(false)
           />
            <Button
             disabled={started}
+            isLoader={btnDellTail}
             text='Удалить из tail'
             linkedList='big'
             extraClass={listStyle.button_size}
@@ -242,8 +276,8 @@ setChange(false)
         </div>
         <div className={`${listStyle.box_input} mt-6 mb-40`}>
           <Input 
-          type="number"
-           isLimitText={started}
+            type="number"
+           isLimitText={true}
             maxLength={4}
             value={indexInput}
             onChange={onFormindexChange}
@@ -251,12 +285,14 @@ setChange(false)
             />
           <Button
             disabled={started}
+            isLoader={btnAddByIndex}
             text='Добавить  по индексу'
             onClick={addByIndex}
             linkedList='big'
           />
           <Button
             disabled={started}
+            isLoader={btnDellByIndex}
             text='Удалить по индексу'
             linkedList='big'
             onClick={deleteByIndex}

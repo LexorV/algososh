@@ -8,8 +8,8 @@ export class Node<T> {
         this.next = (next === undefined ? null : next);
     }
 }
+//Пока не до конца типизировано. В работе.
 import { ElementStates } from '../../types/element-states';
-
 interface ILinkedList<T> {
     append: (element: T) => void;
     getSize: () => number;
@@ -20,7 +20,6 @@ interface ILinkedList<T> {
     deleteHead: any;
     deleteTail: any;
 }
-
 export class LinkedList<T> implements ILinkedList<T> {
     private head: any;
     private size: number;
@@ -74,7 +73,7 @@ export class LinkedList<T> implements ILinkedList<T> {
                 let prev = null
                 curr.value.style = ElementStates.Changing
                 curr.value.head = al;
-                while (currIndex < index && curr.next) {
+                while (currIndex < index) {
                     this.setChange(true)
                     currIndex++
                     await new Promise<void>((res) => {
@@ -123,23 +122,68 @@ export class LinkedList<T> implements ILinkedList<T> {
             currentNode.value.style = ElementStates.Default
             currentNode = currentNode.next;
         }
-
     }
-    deleteByIndex(index: number) {
+    deleteByIndex = async (index: number, cicleCallback: any) => {
         if (index >= this.size) {
             throw new Error("error size");
         }
         if (index === 0) {
             return this.deleteHead();
         }
-        this.size--;
         let prev = null;
         let curr = this.head;
-        for (let i = 0; i < index; i++) {
+        let currentIndex = 0;
+        curr.value.style = ElementStates.Changing
+        while (currentIndex < index) {
+            this.setChange(true)
+            currentIndex++
+            await new Promise<void>((res) => {
+                setTimeout(() => {
+                    res()
+                }, 1000)
+            });
             prev = curr;
-            curr && (curr = curr.next);
+           // prev.value.style = ElementStates.Changing;
+            curr = curr.next;
+            //this.setArr(this.toArray());
+            this.setChange(false)
+
+            if (currentIndex == index) {
+                this.setChange(true)
+                let text = curr.value.text
+                curr.value.style = ElementStates.Changing;
+                this.setArr(this.toArray());
+                await new Promise<void>((res) => {
+                    setTimeout(() => {
+                        res()
+                    }, 1000)
+                });
+                curr.value.text = '';
+                curr.value.style = ElementStates.Default;
+                curr.value.tail = cicleCallback(text);
+                this.setChange(false);
+                // prev.value.tail = ''
+                //  curr.value.tail = '';
+
+            }
+            else {
+                curr.value.style = ElementStates.Changing
+
+
+            }
+
         }
-        prev && curr && (prev.next = curr.next);
+        await new Promise<void>((res) => {
+            setTimeout(() => {
+                res()
+            }, 1000)
+        });
+        prev.value.tail = 'tail';
+        prev.next = curr.next;
+        this.defaultColor();
+        this.setArr(this.toArray());
+
+        this.size--;
         return this;
     }
     deleteHead() {
