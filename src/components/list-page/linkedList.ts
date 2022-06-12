@@ -1,4 +1,5 @@
-import {pause} from '../../helper/helper'
+import { pause } from '../../helper/helper';
+import { Circle } from '../ui/circle/circle';
 export class Node<T> {
     value: T
     next: Node<T> | null
@@ -14,24 +15,24 @@ interface ILinkedList<T> {
     getSize: () => number;
     toArray: any;
     prepend: any;
-    addByIndex:any;
-    deleteByIndex:any;
-    deleteHead:any;
-    deleteTail:any;
+    addByIndex: any;
+    deleteByIndex: any;
+    deleteHead: any;
+    deleteTail: any;
 }
 
 export class LinkedList<T> implements ILinkedList<T> {
-    private head: Node<T> | null;
+    private head: any;
     private size: number;
     private tail: Node<T> | null;;
-    arr:any;
+    arr: any;
     setArr: any;
-    setChange:any;
-    setStarted:any;
+    setChange: any;
+    setStarted: any;
     constructor(arr: any,
-         setArr: any,
-         setChange:any, 
-          setStarted:any) {
+        setArr: any,
+        setChange: any,
+        setStarted: any) {
         this.arr = arr;
         this.head = null;
         this.size = 0;
@@ -41,29 +42,88 @@ export class LinkedList<T> implements ILinkedList<T> {
         this.setStarted = setStarted;
     }
 
-    addByIndex(element: T, index: number) {
+    addByIndex = async (element: T, index: number, al: any) => {
         if (index < 0 || index > this.size) {
             console.log('Enter a valid index');
             return;
         } else {
-            const node = new Node(element);
+            const node = new Node<any>(element);
             if (index === 0) {
-                node.next = this.head
+                this.setChange(true)
+                this.head.value.head = al
+                await new Promise<void>((res) => {
+                    setTimeout(() => {
+                        res()
+                    }, 1000)
+                });
+                this.setChange(false)
+                node.next = this.head;
+                node.value.head = 'head'
+                this.head.value.head = ''
                 this.head = node;
-            } else if (this.head) {
+                this.setArr(this.toArray());
+                await new Promise<void>((res) => {
+                    setTimeout(() => {
+                        res()
+                    }, 1000)
+                });
+                node.value.style = ElementStates.Default
+            } else {
                 let curr = this.head;
                 let currIndex = 0;
-                while (currIndex + 1 < index && curr.next) {
-                    curr = curr.next;
+                let prev = null
+                curr.value.style = ElementStates.Changing
+                curr.value.head = al;
+                while (currIndex < index && curr.next) {
+                    this.setChange(true)
                     currIndex++
-                }
-                let trap = curr.next
-                curr.next = node
-                node.next = trap
-            }
+                    await new Promise<void>((res) => {
+                        setTimeout(() => {
+                            res()
+                        }, 1000)
+                    });
+                    prev = curr
+                    prev.value.style = ElementStates.Changing;
+                    currIndex === 1 ? prev.value.head = "head" : prev.value.head = '';
+                    curr = curr.next;
+                    curr.value.head = al;
+                    this.setChange(false)
+                    if (currIndex == index) {
+                        prev.value.head === "head" ? prev.value.head = 'head' : prev.value.head = '';
+                        curr.value.head = '';
+                        this.defaultColor();
 
+                    }
+                    else {
+                        curr.value.style = ElementStates.Changing
+                        curr.value.head = al;
+                    }
+                }
+                await new Promise<void>((res) => {
+                    setTimeout(() => {
+                        res()
+                    }, 1000)
+                });
+                node.next = curr;
+                prev.next = node;
+                this.setArr(this.toArray())
+                await new Promise<void>((res) => {
+                    setTimeout(() => {
+                        res()
+                    }, 1000)
+                });
+                prev.next.value.style = ElementStates.Default
+            }
             this.size++;
         }
+    }
+    defaultColor() {
+        let currentNode = this.head;
+        while (currentNode) {
+            currentNode.value.style = ElementStates.Default
+            currentNode = currentNode.next;
+        }
+
     }
     deleteByIndex(index: number) {
         if (index >= this.size) {
@@ -127,7 +187,7 @@ export class LinkedList<T> implements ILinkedList<T> {
         this.size++
         return this
     }
-    append = async(element: any) => {
+    append = async (element: any) => {
         const node = new Node(element, this.head);
         this.head = node;
         if (!this.tail) {

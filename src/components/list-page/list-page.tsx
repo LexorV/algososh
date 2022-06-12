@@ -165,7 +165,6 @@ const animDeleteTail = async() => {
 />
 linkedList.tail.value.text = '';
 setChange(false)
-
 }
   const deleteTail = async() => {
     setStarted(true)
@@ -180,13 +179,21 @@ setChange(false)
     setListArray(linkedList.toArray())
     setStarted(false)
   }
-  const addByIndex = () => {
-    linkedList.addByIndex({
+  const addByIndex = async() => {
+    setStarted(true)
+    await linkedList.addByIndex({
       text: textInput,
-      style: ElementStates.Default,
+      style: ElementStates.Modified,
       head: '',
       tail: ''
-    }, indexInput)
+    }, indexInput, (
+    <Circle
+    letter={textInput}
+    state={ElementStates.Changing}
+    isSmall={true}
+  />))
+    console.log(linkedList.head)
+    setStarted(false)
     setListArray(linkedList.toArray());
   }
   const deleteByIndex  = () => {
