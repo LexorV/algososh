@@ -12,7 +12,6 @@ import { ElementStates } from '../../types/element-states';
 import { selectionSort } from './selectionSort';
 import { TobjectText } from '../../types/sorting-page'
 export const SortingPage: React.FC = () => {
-  const [indexSort, setindexSort] = useState<number | null>(null);
   const [started, setStarted] = useState<boolean>(false);
   const [direction, setDiraction] = useState(Direction.Ascending);
   const [radioBabel, setRadioBabel] = useState(false);
@@ -21,13 +20,38 @@ export const SortingPage: React.FC = () => {
   const startAlgo = async () => {
     setStarted(true)
     if (radioSelection) {
-      await selectionSort(diogrammArr, setindexSort, setDiogrammArr, direction)
+      let selector = selectionSort(diogrammArr, direction);
+      animationSelection(selector)
     }
     else {
-      await bubbleSort(diogrammArr, setindexSort, setDiogrammArr, direction)
+      let bubble = bubbleSort(diogrammArr, direction);
+      animationBublle(bubble);
     }
     setStarted(false)
   }
+  const animationSelection = async (arr: TobjectText[][]) => {
+    for (const element of arr) {
+      await new Promise<void>((res) => {
+        setTimeout(() => {
+          res()
+        }, 500)
+      });
+      setDiogrammArr(element);
+    }
+  }
+  const animationBublle = async (arr: TobjectText[][]) => {
+    for (const element of arr) {
+      await new Promise<void>((res) => {
+        setTimeout(() => {
+          res()
+        }, 500)
+      });
+      setDiogrammArr(element);
+    }
+  }
+
+
+
   const newArr = () => {
     let arrRandom = randomArr()
     const arrObj = arrRandom.map((el) => {
