@@ -1,64 +1,29 @@
 import React from "react";
 interface IStack<T> {
-    push: (item: string,
-        setStart: React.Dispatch<React.SetStateAction<boolean>>,
-        setterColor: React.Dispatch<React.SetStateAction<boolean>>
-    ) => void
-    pop: (
-        setStart: React.Dispatch<React.SetStateAction<boolean>>,
-        setterColor: React.Dispatch<React.SetStateAction<boolean>>
-    ) => void;
-    clear(
-        setfield:React.Dispatch<React.SetStateAction<string>>
-    ): void;
+    push: (item: string) => void
+    pop: () => void;
+    clear(): void;
     getSize: () => number;
     getElements: () => string[];
 }
 export class Stack<T> implements IStack<T> {
     arrStack: string[];
-    setArrStack: React.Dispatch<React.SetStateAction<string[]>>;
     constructor(
         arrStack: string[],
-        setArrStack: React.Dispatch<React.SetStateAction<string[]>>,
     ) {
         this.arrStack = arrStack
-        this.setArrStack = setArrStack
     }
     push = async (
         item: string,
-        setStart: React.Dispatch<React.SetStateAction<boolean>>,
-        setterColor: React.Dispatch<React.SetStateAction<boolean>>
     ) => {
-        setterColor(true)
         this.arrStack.push(item);
-        await new Promise<void>((res) => {
-            setTimeout(() => {
-                res()
-            }, 1000)
-        })
-        setterColor(false)
-        setStart(true)
-        this.setArrStack(this.arrStack)
     };
-    pop = async (
-        setStart: React.Dispatch<React.SetStateAction<boolean>>,
-        setterColor: React.Dispatch<React.SetStateAction<boolean>>
-    ) => {
-        setterColor(true)
-        await new Promise<void>((res) => {
-            setTimeout(() => {
-                res()
-            }, 1000)
-        })
+    pop = async () => {
         this.arrStack.pop()
-        setStart(true)
-        this.setArrStack(this.arrStack)
-        setterColor(false)
     };
-    clear = (
-    setfield:React.Dispatch<React.SetStateAction<string>>)=>
+    clear = () =>
     {
-        setfield('')
+        this.arrStack = [];
     }
     getSize = () => this.arrStack.length;
     getElements = () => this.arrStack;

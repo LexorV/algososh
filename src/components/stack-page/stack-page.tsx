@@ -17,11 +17,33 @@ export const StackPage: React.FC = () => {
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value);
   }
-  const algoStack = new Stack(arrStack, setArrStack)
-  const addEl = () => {
-    algoStack.push(textInput, setStartFunc, setColorState);
-    algoStack.clear(setTextInput)
+  const algoStack = new Stack(arrStack)
+  const addEl = async() => {
+    setColorState(true)
+    algoStack.push(textInput);
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+          res()
+      }, 1000)
+  })
+  setArrStack(algoStack.getElements())
+    setStartFunc(true)
+    setColorState(false)
+    setTextInput('')
   }
+  const dellEl = async() => {
+    setColorState(true)
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+          res()
+      }, 1000)
+  })
+  algoStack.pop()
+  setStartFunc(true)
+  setArrStack(algoStack.getElements())
+  setColorState(false)
+  }
+
   useEffect(() => {
     if (textInput === '') {
       setPushedClick(true)
@@ -72,9 +94,7 @@ export const StackPage: React.FC = () => {
             disabled={popClick}
             text='Удалить'
             extraClass={'mr-40'}
-            onClick={
-              () => algoStack.pop(setStartFunc, setColorState)
-            }
+            onClick={dellEl}
           />
           <Button
             disabled={popClick}
