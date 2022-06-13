@@ -4,43 +4,26 @@ import { Circle } from '../ui/circle/circle';
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { nanoid } from "nanoid";
-import fibonacciStyle from './fibonacci-page.module.css'
+import fibonacciStyle from './fibonacci-page.module.css';
+import {fiboAlgo} from './fiboAlgo';
 export const FibonacciPage: React.FC = () => {
   const [numberInput, setNumberInput] = useState<number>(0);
   const [started, setStarted] = useState<boolean>(false);
-  const [indexfib, setIndexfib] = useState<number | null>(null)
   const [arrNumber, setArrNumber] = useState<number[]>([]);
-  const fiboAlgo = async (
-    n: number
-  ) => {
-    let arr: number[] = [];
-    for (let i = 0; i < n + 1; i++) {
-      await new Promise<void>((res) => {
+  const startAlgo = async () => {
+    setStarted(true)
+    animationFibb(fiboAlgo(numberInput));
+    setStarted(false)
+  }
+  const animationFibb = async(arr:number[][]) => {
+    for (const element of arr) {
+     await new Promise<void>((res) => {
         setTimeout(() => {
           res()
         }, 500)
-      })
-      if(arr.length < 1) {
-        arr.push(0)
-        setIndexfib(i)
-        setArrNumber(arr)
-      }
-      else if(arr.length < 2) {
-        arr.push(1)
-        setIndexfib(i)
-        setArrNumber(arr)
-      }
-      else {
-        arr.push(arr[i - 2] + arr[i - 1])
-        setIndexfib(i)
-        setArrNumber(arr)
-      }
-    }
+    });
+    setArrNumber(element);
   }
-  const startAlgo = async () => {
-    setStarted(true)
-    await fiboAlgo(numberInput)
-    setStarted(false)
   }
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNumberInput(parseInt(e.target.value));
