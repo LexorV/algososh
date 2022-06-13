@@ -10,11 +10,12 @@ import {ArrowIcon} from '../ui/icons/arrow-icon';
 import  { TobjectText } from '../../types';
 import {LinkedList } from './linkedList';
 import {pause} from '../../helper/helper';
+import {Node} from './linkedList';
 export const ListPage: React.FC = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [textInput, setTextInput] = useState<string>('');
   const [indexInput, setIndexInput] = useState<number>(0)
-  const [listArray, setListArray] = useState<any[]>([]);
+  const [listArray, setListArray] = useState<Node<TobjectText>[]>([]);
   const [stateChange, setChange] = useState<boolean>(false);
   const [btnAddHead, setbtnAddHead] = useState<boolean>(false);
   const [btnAddTail, setbtnAddTail] = useState<boolean>(false);
@@ -23,6 +24,7 @@ export const ListPage: React.FC = () => {
   const [btnAddByIndex, setBtnAddByIndex] = useState<boolean>(false);
   const [btnDellByIndex, setDellAddByIndex] = useState<boolean>(false);
 
+  //any т.к. иначе везде требуется делать проверку на null
   const ref = useRef<any>(null);
   function LinkedListAdd() {
     if (ref.current === null) {
@@ -166,6 +168,8 @@ setChange(false)
     linkedList.deleteHead()
     setListArray(linkedList.toArray())
     setStarted(false)
+    setBtnDellHead(false)
+
   }
 const animDeleteTail = async() => {
   setChange(true)
@@ -213,7 +217,7 @@ setBtnDellHead(false)
     setListArray(linkedList.toArray());
     setBtnAddByIndex(false)
   }
-  const cicleCallback = (data:any) => {
+  const cicleCallback = (data:string | number) => {
     return (
       <Circle
       letter={data}

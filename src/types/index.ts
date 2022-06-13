@@ -1,8 +1,8 @@
 import {ReactNode, ReactElement} from "react";
 export type TobjectText = {
-    id: number,
+    id?: number,
     text: string,
     style:any,
-    head?:string | ReactElement ,
-    tail?:string
+    head?:string | ReactElement,
+    tail?:string | ReactElement
 }

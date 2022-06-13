@@ -1,39 +1,40 @@
 import {ReactElement} from "react";
-
+import { ElementStates } from '../../types/element-states';
+import {TobjectText} from '../../types'
 export class Node<T> {
-    value: T
+    value: T | TobjectText
     next: Node<T> | null
     constructor(value: T, next?: Node<T> | null) {
         this.value = value;
         this.next = (next === undefined ? null : next);
     }
 }
-//Пока не до конца типизировано. В работе.
-import { ElementStates } from '../../types/element-states';
-interface ILinkedList<T> {
-    append: (element: T) => void;
+export interface ILinkedList {
+    append: (element: TobjectText) => void;
     getSize: () => number;
     toArray: () => void;
-    prepend: (element: T) => void
-    addByIndex: (element:T, index: number, al:ReactElement) => void;
+    prepend: (element: TobjectText) => void
+    addByIndex: (element:TobjectText, index: number, al:ReactElement) => void;
     deleteByIndex: (
         index:number,
         cicleCallback: (text:string | number) => ReactElement) => void;
     deleteHead: () => void;
     deleteTail: () => void;
 }
-export class LinkedList<T> implements ILinkedList<T> {
-    private head: any;
+export class LinkedList<T> implements ILinkedList {
+    private head:  Node<TobjectText> | null;
     private size: number;
-    private tail: Node<T> | null;;
-    arr: any;
-    setArr: any;
-    setChange: any;
-    setStarted: any;
-    constructor(arr: any,
-        setArr: any,
-        setChange: any,
-        setStarted: any) {
+    private tail: Node<TobjectText> | null;
+    arr: Node<TobjectText>[];
+    setArr: React.Dispatch<React.SetStateAction<Node<TobjectText>[]>>;
+    setChange: React.Dispatch<React.SetStateAction<boolean>>;
+    setStarted: React.Dispatch<React.SetStateAction<boolean>>;
+    constructor(
+        arr: Node<TobjectText>[],
+        setArr: React.Dispatch<React.SetStateAction<Node<TobjectText>[]>>,
+        setChange: React.Dispatch<React.SetStateAction<boolean>>,
+        setStarted: React.Dispatch<React.SetStateAction<boolean>>) 
+        {
         this.arr = arr;
         this.head = null;
         this.size = 0;
@@ -43,15 +44,16 @@ export class LinkedList<T> implements ILinkedList<T> {
         this.setStarted = setStarted;
     }
 
-    addByIndex = async (element: T, index: number, al: ReactElement) => {
+    addByIndex = async (element: TobjectText, index: number, al: ReactElement) => {
         if (index < 0 || index > this.size) {
             console.log('Enter a valid index');
             return;
         } else {
-            const node = new Node<any>(element);
-            if (index === 0) {
+            const node = new Node(element);
+            if (index === 0 && this.head) {
                 this.setChange(true)
-                this.head.value.head = al
+                console.log(this.head)
+                this.head.value && (this.head.value.head = al)
                 await new Promise<void>((res) => {
                     setTimeout(() => {
                         res()
@@ -72,9 +74,11 @@ export class LinkedList<T> implements ILinkedList<T> {
             } else {
                 let curr = this.head;
                 let currIndex = 0;
-                let prev = null
-                curr.value.style = ElementStates.Changing
-                curr.value.head = al;
+                let prev = null;
+                if(curr) {
+                    curr.value.style = ElementStates.Changing
+                    curr.value.head = al;
+                }
                 while (currIndex < index) {
                     this.setChange(true)
                     currIndex++
@@ -83,21 +87,25 @@ export class LinkedList<T> implements ILinkedList<T> {
                             res()
                         }, 1000)
                     });
-                    prev = curr
+                    prev = curr;
+                    if(prev) {
                     prev.value.style = ElementStates.Changing;
                     currIndex === 1 ? prev.value.head = "head" : prev.value.head = '';
-                    curr = curr.next;
-                    curr.value.head = al;
+                    curr && (curr = curr.next);
+                    curr && (curr.value.head = al);
                     this.setChange(false)
-                    if (currIndex == index) {
+                    if (currIndex == index && curr) {
                         prev.value.head === "head" ? prev.value.head = 'head' : prev.value.head = '';
                         curr.value.head = '';
                         this.defaultColor();
+                    }
 
                     }
                     else {
+                        if(curr) {
                         curr.value.style = ElementStates.Changing
                         curr.value.head = al;
+                        }
                     }
                 }
                 await new Promise<void>((res) => {
@@ -106,14 +114,14 @@ export class LinkedList<T> implements ILinkedList<T> {
                     }, 1000)
                 });
                 node.next = curr;
-                prev.next = node;
+                prev && (prev.next = node);
                 this.setArr(this.toArray())
                 await new Promise<void>((res) => {
                     setTimeout(() => {
                         res()
                     }, 1000)
                 });
-                prev.next.value.style = ElementStates.Default
+                prev && prev.next && (prev.next.value.style = ElementStates.Default)
             }
             this.size++;
         }
@@ -135,7 +143,7 @@ export class LinkedList<T> implements ILinkedList<T> {
         let prev = null;
         let curr = this.head;
         let currentIndex = 0;
-        curr.value.style = ElementStates.Changing
+        curr && (curr.value.style = ElementStates.Changing)
         while (currentIndex < index) {
             this.setChange(true)
             currentIndex++
@@ -145,12 +153,10 @@ export class LinkedList<T> implements ILinkedList<T> {
                 }, 1000)
             });
             prev = curr;
-           // prev.value.style = ElementStates.Changing;
-            curr = curr.next;
-            //this.setArr(this.toArray());
+            curr && (curr = curr.next);
             this.setChange(false)
 
-            if (currentIndex == index) {
+            if (currentIndex == index && curr) {
                 this.setChange(true)
                 let text = curr.value.text
                 curr.value.style = ElementStates.Changing;
@@ -164,12 +170,9 @@ export class LinkedList<T> implements ILinkedList<T> {
                 curr.value.style = ElementStates.Default;
                 curr.value.tail = cicleCallback(text);
                 this.setChange(false);
-                // prev.value.tail = ''
-                //  curr.value.tail = '';
-
             }
             else {
-                curr.value.style = ElementStates.Changing
+                curr && (curr.value.style = ElementStates.Changing)
 
 
             }
@@ -180,8 +183,10 @@ export class LinkedList<T> implements ILinkedList<T> {
                 res()
             }, 1000)
         });
-        prev.value.tail = 'tail';
-        prev.next = curr.next;
+        if(prev && curr) {
+            curr.next == null && (prev.value.tail = 'tail');
+            prev.next = curr.next;
+        }
         this.defaultColor();
         this.setArr(this.toArray());
 
@@ -220,7 +225,7 @@ export class LinkedList<T> implements ILinkedList<T> {
         return this;
     }
 
-    prepend(element: T) {
+    prepend(element: TobjectText) {
         const node = new Node(element);
         if (!this.head || !this.tail) {
             this.head = node;
@@ -232,7 +237,7 @@ export class LinkedList<T> implements ILinkedList<T> {
         this.size++
         return this
     }
-    append = async (element: any) => {
+    append = async (element: TobjectText) => {
         const node = new Node(element, this.head);
         this.head = node;
         if (!this.tail) {
