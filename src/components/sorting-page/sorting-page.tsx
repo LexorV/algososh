@@ -1,7 +1,7 @@
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { Button } from "../ui/button/button";
-import { randomNumber } from '../../helper/helper';
+import { randomNumber } from '../../utils/utils';
 import sortingStyle from './sorting-page.module.css'
 import { RadioInput } from '../ui/radio-input/radio-input';
 import { Direction } from "../../types/direction";

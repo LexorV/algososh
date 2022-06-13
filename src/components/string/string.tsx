@@ -5,16 +5,12 @@ import { Button } from "../ui/button/button";
 import stringStyle from './string.module.css';
 import { Circle } from '../ui/circle/circle';
 import { ElementStates } from '../../types/element-states';
-import {uid} from '../../helper/helper';
-type TobjectText = {
-  id: number,
-  text: string,
-  style:any
-}
+import { nanoid } from "nanoid";
+import {TobjectText} from '../../types';
 export const StringComponent: React.FC = () => {
   const [textInput, setTextInput] = useState<string>('');
   const [arrText, setArrText] = useState<TobjectText[]>([]);
-  const [hightIndex, setHight] = useState<number | null>(null)
+  const [hightIndex, setHight] = useState<number | null>(null); //используется для правильного рендера
   const [started, setStarted] = useState<boolean>(false)
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value);
@@ -27,8 +23,8 @@ export const StringComponent: React.FC = () => {
     const copy = [...arrText];
     let low = 0;
     let hight = copy.length - 1;
-    const left = copy[low]
-    const right = copy[hight]
+    const left = copy[low];
+    const right = copy[hight];
     if (!copy) {
       return;
     }
@@ -75,6 +71,7 @@ export const StringComponent: React.FC = () => {
       }
     })
     setArrText(arrObjText);
+    
   }
   useEffect(() => {
     if(arrText.length > 1 && started == false) {
@@ -94,7 +91,7 @@ export const StringComponent: React.FC = () => {
         <ul className={stringStyle.lists_circle}>
           {arrText.map((list) => {
           return  (
-          <li key={uid()} >
+          <li key={nanoid()} >
             <Circle state={list.style} letter={list.text} />
           </li>)})}
         </ul>

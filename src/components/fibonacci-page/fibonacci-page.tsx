@@ -3,7 +3,7 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Circle } from '../ui/circle/circle';
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
-import { uid } from '../../helper/helper';
+import { nanoid } from "nanoid";
 import fibonacciStyle from './fibonacci-page.module.css'
 export const FibonacciPage: React.FC = () => {
   const [numberInput, setNumberInput] = useState<number>(0);
@@ -64,7 +64,7 @@ export const FibonacciPage: React.FC = () => {
         <ul className={fibonacciStyle.lists_circle}>
           {arrNumber.length >= 1 && (arrNumber.map((list) => {
             return (
-              <li key={uid()} >
+              <li key={nanoid()} >
                 <Circle letter={list} />
               </li>)
           }))}

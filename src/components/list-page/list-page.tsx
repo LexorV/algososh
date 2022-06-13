@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, SyntheticEvent, useEffect, useRef } from "react";
+import React, { useState, ChangeEvent,useEffect, useRef } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
@@ -9,7 +9,6 @@ import listStyle from './list-page.module.css';
 import {ArrowIcon} from '../ui/icons/arrow-icon';
 import  { TobjectText } from '../../types';
 import {LinkedList } from './linkedList';
-import {pause} from '../../helper/helper';
 import {Node} from './linkedList';
 export const ListPage: React.FC = () => {
   const [started, setStarted] = useState<boolean>(false);
