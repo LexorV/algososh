@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, SyntheticEvent, useEffect} from "react";
+import React, { useState, ChangeEvent, SyntheticEvent} from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
@@ -7,58 +7,29 @@ import { Circle } from '../ui/circle/circle';
 import { ElementStates } from '../../types/element-states';
 import { nanoid } from "nanoid";
 import {TobjectText} from '../../types';
+import { stringSort } from "./srtringSort";
 export const StringComponent: React.FC = () => {
   const [textInput, setTextInput] = useState<string>('');
   const [arrText, setArrText] = useState<TobjectText[]>([]);
-  const [hightIndex, setHight] = useState<number | null>(null); //используется для правильного рендера
   const [started, setStarted] = useState<boolean>(false)
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value);
   }
-  const stringSort = async (
-    arrText: Array<TobjectText>,
-    setHight: (n: number) => void,
-    setArrText: (arrText: Array<TobjectText>) => void,
-  ) => {
-    const copy = [...arrText];
-    let low = 0;
-    let hight = copy.length - 1;
-    const left = copy[low];
-    const right = copy[hight];
-    if (!copy) {
-      return;
-    }
-    while (low <= hight) {
-      copy[low].style = ElementStates.Changing
-      copy[hight].style = ElementStates.Changing
-      if(left.text <= right.text) {
-        await new Promise<void>((res) => {
-          setTimeout(() => {
-            res()
-          }, 1000)
-        })
-        setHight(hight)
-        copy[low].style = ElementStates.Modified
-        copy[hight].style = ElementStates.Modified
-        const x = copy[low]
-        copy[low] = copy[hight]
-        copy[hight] = x
-        low++;
-        hight--;
-        setArrText(copy)
-      }
-      else {
-        low++;
-        hight--;
-      }
-    }
-    setArrText(copy)
+  const animationString = async(arr:TobjectText[][]) => {
+    for (const element of arr) {
+     await new Promise<void>((res) => {
+        setTimeout(() => {
+          res()
+        }, 1000)
+    });
+    setArrText(element);
   }
-  const startAlgo = async () => {
+  }
+  const startAlgo = async (arr:TobjectText[]) => {
     setStarted(true)
-    await stringSort(arrText, setHight, setArrText)
+    const arrayCopy = stringSort(arr);
+    arrayCopy && (await animationString(arrayCopy))
     setStarted(false)
-    setHight(null)
   }
   const onChangeForm = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -70,14 +41,8 @@ export const StringComponent: React.FC = () => {
         style:ElementStates.Default
       }
     })
-    setArrText(arrObjText);
-    
+   startAlgo(arrObjText);
   }
-  useEffect(() => {
-    if(arrText.length > 1 && started == false) {
-      startAlgo()
-      }
-    },[arrText])
   return (
     <SolutionLayout title="Строка">
       <div className={stringStyle.box_main}>
