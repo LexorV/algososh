@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, SyntheticEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, SyntheticEvent, useEffect, useCallback } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
@@ -27,10 +27,8 @@ const algoQueue = new Queue(7);
 export const QueuePage: React.FC = () => {
   const [textInput, setTextInput] = useState<string>('');
   const [pushedClick, setPushedClick] = useState<boolean>(true);
-  const [isMaxArr, setIsMaxArr] = useState<boolean>(false);
   const [isMinArr, setIsMinArr] = useState<boolean>(true)
   const [queueArray, setQueueArray] = useState<TobjectText[]>(generatArray());
-  const [colorState, setColorState] = useState<boolean>(false);
   const [isClear, setIsClear] = useState<boolean>(true)
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value);
@@ -39,24 +37,67 @@ export const QueuePage: React.FC = () => {
     setQueueArray(generatArray())
     algoQueue.clear()
     setIsClear(true)
-    setIsMaxArr(false)
     setIsMinArr(true)
   }
-  useEffect(() => {
-  }, [])
-  const addEl = () => {
-    algoQueue.enqueue(textInput,
-      setQueueArray,
+  const addEl = async() => {
+    const copyArr =  algoQueue.enqueue(
+      textInput,
       queueArray,
-      setColorState,
-      setIsMaxArr,
-      setIsMinArr
     )
-    setIsClear(false)
+    copyArr.forEach((el, index) => {
+      if(el.tail === 'tail') {
+        let copy = [...queueArray]
+        copy[index].style = ElementStates.Changing
+        setQueueArray(copy);
+      }
+    })
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+        res()
+      }, 500)
+  });
+  setQueueArray(copyArr);
+ setIsClear(false)
+    await new Promise<void>((res) => {
+      setTimeout(() => {
+        res()
+      }, 500)
+  });
+  copyArr.forEach(el => el.style = ElementStates.Default);
     setTextInput('')
+    setIsMinArr(false)
   }
+  const dellEl = async() => {
+    setIsMinArr(true)
+    const copyArr = algoQueue.dequeue(
+      queueArray,
+      )
+      await new Promise<void>((res) => {
+        setTimeout(() => {
+          res()
+        }, 500)
+    });
+      queueArray.forEach((el, index) => {
+        if(el.head === 'head') {
+          let copy = [...queueArray]
+          copy[index].style = ElementStates.Changing
+          setQueueArray(copy);
+        }
+      })
+
+      await new Promise<void>((res) => {
+        setTimeout(() => {
+          res()
+        }, 500)
+    });
+      setQueueArray(copyArr)
+      setIsMinArr(false)
+    setIsClear(false)
+  }
+
+
   useEffect(() => {
-    if (textInput === '' || isMaxArr ) {
+    if (textInput === '' || queueArray[6].tail === 'tail' ) {
       setPushedClick(true)
     }
     else {
@@ -80,14 +121,7 @@ export const QueuePage: React.FC = () => {
             disabled={isMinArr}
             text='Удалить'
             extraClass={'mr-40'}
-            onClick={
-              () => algoQueue.dequeue(
-                setQueueArray,
-                queueArray,
-                setColorState,
-                setIsMinArr
-                )
-            }
+            onClick={dellEl}
           />
           <Button
             disabled={isClear}
