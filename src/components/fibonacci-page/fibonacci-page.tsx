@@ -42,7 +42,7 @@ export const FibonacciPage: React.FC = () => {
             max={19}
             value={numberInput}
             onChange={onFormChange} />
-          <Button isLoader={started} type="submit" text='Расчитать' />
+          <Button disabled={numberInput > 18} isLoader={started} type="submit" text='Расчитать' />
         </form>
         <ul className={fibonacciStyle.lists_circle}>
           {arrNumber.length >= 1 && (arrNumber.map((list) => {
