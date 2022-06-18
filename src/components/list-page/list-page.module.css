@@ -1,0 +1,28 @@
+.box_input {
+    display:flex;
+    width:952px;
+    gap:12px;
+}
+.box_main {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+.lists_circle {
+    list-style-type: none;
+    display: flex;
+    gap: 25px;
+}
+.input_field_size {
+    width:204px;
+}
+.button_size {
+    width:175px;
+}
+.list {
+    display:flex;
+    align-items: center;
+    gap: 25px;
+
+
+}
