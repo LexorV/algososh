@@ -32,5 +32,6 @@ export const stringSort = (
         hight--;
       }
     }
+    console.log(arrCopy)
     return arrCopy
   }
