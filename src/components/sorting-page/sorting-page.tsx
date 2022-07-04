@@ -10,7 +10,7 @@ import { nanoid } from "nanoid";
 import { bubbleSort } from './bubbleSort';
 import { ElementStates } from '../../types/element-states';
 import { selectionSort } from './selectionSort';
-import { TobjectText } from '../../types/sorting-page'
+import { TobjectText } from '../../types/sorting-page';
 export const SortingPage: React.FC = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [direction, setDiraction] = useState(Direction.Ascending);
@@ -91,6 +91,8 @@ export const SortingPage: React.FC = () => {
   }
   useEffect(() => {
     setDiogrammArr(newArr())
+    //console.log(bubbleSort([{number:30, style:ElementStates.Default},{number:67, style:ElementStates.Default}], Direction.Ascending))
+    console.log(selectionSort([{number:67, style:ElementStates.Default},{number:30, style:ElementStates.Default}], Direction.Ascending))
   }, [])
   return (
     <SolutionLayout title="Сортировка массива">
