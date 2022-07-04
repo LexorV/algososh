@@ -91,8 +91,6 @@ export const SortingPage: React.FC = () => {
   }
   useEffect(() => {
     setDiogrammArr(newArr())
-    //console.log(bubbleSort([{number:30, style:ElementStates.Default},{number:67, style:ElementStates.Default}], Direction.Ascending))
-    console.log(selectionSort([{number:67, style:ElementStates.Default},{number:30, style:ElementStates.Default}], Direction.Ascending))
   }, [])
   return (
     <SolutionLayout title="Сортировка массива">

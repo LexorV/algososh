@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, SyntheticEvent} from "react";
+import React, { useState, ChangeEvent, SyntheticEvent } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
@@ -6,7 +6,7 @@ import stringStyle from './string.module.css';
 import { Circle } from '../ui/circle/circle';
 import { ElementStates } from '../../types/element-states';
 import { nanoid } from "nanoid";
-import {TobjectText} from '../../types';
+import { TobjectText } from '../../types';
 import { stringSort } from "./srtringSort";
 export const StringComponent: React.FC = () => {
   const [textInput, setTextInput] = useState<string>('');
@@ -15,17 +15,17 @@ export const StringComponent: React.FC = () => {
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTextInput(e.target.value);
   }
-  const animationString = async(arr:TobjectText[][]) => {
+  const animationString = async (arr: TobjectText[][]) => {
     for (const element of arr) {
-     await new Promise<void>((res) => {
+      await new Promise<void>((res) => {
         setTimeout(() => {
           res()
         }, 1000)
-    });
-    setArrText(element);
+      });
+      setArrText(element);
+    }
   }
-  }
-  const startAlgo = async (arr:TobjectText[]) => {
+  const startAlgo = async (arr: TobjectText[]) => {
     setStarted(true)
     const arrayCopy = stringSort(arr);
     arrayCopy && (await animationString(arrayCopy))
@@ -36,29 +36,39 @@ export const StringComponent: React.FC = () => {
     let textInputArr = textInput.split('');
     const arrObjText = textInputArr.map((el, index) => {
       return {
-        id:index,
-        text:el,
-        style:ElementStates.Default
+        id: index,
+        text: el,
+        style: ElementStates.Default
       }
     })
-   startAlgo(arrObjText);
+    startAlgo(arrObjText);
   }
   return (
     <SolutionLayout title="Строка">
       <div className={stringStyle.box_main}>
-        <form onSubmit={onChangeForm} className={stringStyle.box_input}>
-          <Input type="text" isLimitText={true}
+        <form
+          onSubmit={onChangeForm}
+          className={stringStyle.box_input}>
+          <Input
+            type="text"
+            isLimitText={true}
             maxLength={11}
             value={textInput}
             onChange={onFormChange} />
-          <Button isLoader={started} type="submit" text='Развернуть' />
+          <Button
+            isLoader={started}
+            type="submit"
+            disabled={started || textInput == ''}
+            text='Развернуть'
+          />
         </form>
         <ul className={stringStyle.lists_circle}>
           {arrText.map((list) => {
-          return  (
-          <li key={nanoid()} >
-            <Circle state={list.style} letter={list.text} />
-          </li>)})}
+            return (
+              <li key={nanoid()} >
+                <Circle state={list.style} letter={list.text} />
+              </li>)
+          })}
         </ul>
       </div>
     </SolutionLayout>
