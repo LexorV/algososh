@@ -2,6 +2,7 @@ import { ElementStates } from '../../types/element-states';
 import { Direction } from "../../types/direction";
 import { bubbleSort } from './bubbleSort';
 import { selectionSort } from './selectionSort';
+describe('test bubbleSort', () => {
 test('Тестирование алгоритма сортировки пузырьком c массивом из нескольких элементов', () => {
     expect(bubbleSort([
             { number: 30, style: ElementStates.Default },
@@ -28,12 +29,16 @@ test('Тестирование алгоритма сортировки пузы�
         []
     ])
 })
+
+
 test('Тестирование алгоритма сортировки пузырьком c массивом из одного элемента', () => {
     expect(bubbleSort([{ number: 30, style: ElementStates.Default }],
         Direction.Ascending)).toEqual([
         [{ number: 30, style: ElementStates.Default }]
     ])
 })
+})
+describe('test selectionSort', () => {
 test('Тестирование алгоритма сортировки выбором c пустым массивом', () => {
     expect(selectionSort([],
         Direction.Ascending)).toEqual([
@@ -72,4 +77,5 @@ test('Тестирование алгоритма сортировки выбо�
 
 
     ])
+})
 })

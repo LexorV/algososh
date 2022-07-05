@@ -1,5 +1,5 @@
 import { stringSort } from './srtringSort';
-
+describe('test string', () => {
 test('Корректность разворачивание строки с чётным количеством символов', () => {
     expect(stringSort([
         { id: 0, text: '1', style: 'default' },
@@ -96,4 +96,5 @@ test('Корректность разворачивание строки с пу
         [
             []
         ])
+})
 })
