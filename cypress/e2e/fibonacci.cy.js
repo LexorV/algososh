@@ -1,4 +1,4 @@
-describe('start string', () => {
+describe('start fobonacci', () => {
     beforeEach(() => {
         cy.visit('http://localhost:3001/fibonacci')
     })
@@ -31,6 +31,5 @@ describe('start string', () => {
         testCicle(3, 2, 1)
         cy.wait(500)
         testCicle(4, 3, 2)
-
     })
 })
