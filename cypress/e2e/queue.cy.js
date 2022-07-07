@@ -1,33 +1,39 @@
 const addAnimEll = (style, indexEl) => {
     cy.get('[class*=circle_content]')
-    .each((el, index) => {
-        if(index === indexEl )
-        cy.wrap(el).find(`[class*=${style}]`)
-    })
+        .each((el, index) => {
+            if(index === indexEl)
+                cy.wrap(el).find(`[class*=${style}]`)
+        })
 }
 const checkText = (indexEl) => {
     cy.get('[class*=circle_content]')
-    .should('have.length', 7)
-    .each((el, index) => {
-        if(index === indexEl )
-        cy.wrap(el).contains('12')
-    })
+        .should('have.length', 7)
+        .each((el, index) => {
+            if(index === indexEl) {
+                cy.wrap(el).contains('12')
+            }
+
+        })
 }
 const checkHead = (indexEl) => {
     cy.get('[class*=circle_content]')
-    .should('have.length', 7)
-    .each((el, index) => {
-        if(index === indexEl )
-        cy.wrap(el).contains('head')
-    })
+        .should('have.length', 7)
+        .each((el, index) => {
+            if(index === indexEl) {
+                cy.wrap(el).contains('head')
+            }
+
+        })
 }
 const checkTail = (indexEl) => {
     cy.get('[class*=circle_content]')
-    .should('have.length', 7)
-    .each((el, index) => {
-        if(index === indexEl )
-        cy.wrap(el).contains('tail')
-    })
+        .should('have.length', 7)
+        .each((el, index) => {
+            if(index === indexEl) {
+                cy.wrap(el).contains('tail')
+            }
+
+        })
 }
 const addEll = (indexEl, indexElHead, indexElTail) => {
     cy.get('input').click({ force: true }).type('12')
@@ -68,10 +74,10 @@ describe('start queue', () => {
         addEll(1, 0, 1)
         cy.get('button').eq(3).click({ force: true })
         cy.get('[class*=circle_letter]')
-        .each((el) => {
-            cy.get(el).should('not.have.text', '12');
-            cy.get(el).should('not.have.text', 'head');
-            cy.get(el).should('not.have.text', 'tail');
-        })
+            .each((el) => {
+                cy.get(el).should('not.have.text', '12');
+                cy.get(el).should('not.have.text', 'head');
+                cy.get(el).should('not.have.text', 'tail');
+            })
     })
 })
