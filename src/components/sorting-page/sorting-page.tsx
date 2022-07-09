@@ -10,7 +10,7 @@ import { nanoid } from "nanoid";
 import { bubbleSort } from './bubbleSort';
 import { ElementStates } from '../../types/element-states';
 import { selectionSort } from './selectionSort';
-import { TobjectText } from '../../types/sorting-page'
+import { TobjectText } from '../../types/sorting-page';
 export const SortingPage: React.FC = () => {
   const [started, setStarted] = useState<boolean>(false);
   const [direction, setDiraction] = useState(Direction.Ascending);

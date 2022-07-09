@@ -7,6 +7,7 @@ export const bubbleSort = (
     direction: Direction
 
 ) => {
+    if(arr.length > 1) {
     const copy = [...arr]
     const arrCopy = [];
     for (let i = 0; i < copy.length; i++) {
@@ -45,5 +46,7 @@ export const bubbleSort = (
             }
         }
     }
-    return arrCopy;
+    return arrCopy
+}
+    return [arr];
 }

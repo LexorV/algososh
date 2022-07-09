@@ -1,11 +1,11 @@
-import React, { useState, ChangeEvent, SyntheticEvent} from "react";
+import React, { useState, ChangeEvent, SyntheticEvent } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Circle } from '../ui/circle/circle';
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { nanoid } from "nanoid";
 import fibonacciStyle from './fibonacci-page.module.css';
-import {fiboAlgo} from './fiboAlgo';
+import { fiboAlgo } from './fiboAlgo';
 export const FibonacciPage: React.FC = () => {
   const [numberInput, setNumberInput] = useState<number>(0);
   const [started, setStarted] = useState<boolean>(false);
@@ -15,15 +15,15 @@ export const FibonacciPage: React.FC = () => {
     animationFibb(fiboAlgo(numberInput));
     setStarted(false)
   }
-  const animationFibb = async(arr:number[][]) => {
+  const animationFibb = async (arr: number[][]) => {
     for (const element of arr) {
-     await new Promise<void>((res) => {
+      await new Promise<void>((res) => {
         setTimeout(() => {
           res()
         }, 500)
-    });
-    setArrNumber(element);
-  }
+      });
+      setArrNumber(element);
+    }
   }
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNumberInput(parseInt(e.target.value));
@@ -42,7 +42,14 @@ export const FibonacciPage: React.FC = () => {
             max={19}
             value={numberInput}
             onChange={onFormChange} />
-          <Button disabled={numberInput > 18} isLoader={started} type="submit" text='Расчитать' />
+          <Button
+            disabled={numberInput > 18 ||
+              numberInput === 0 ||
+              !numberInput ||
+              numberInput < 0}
+            isLoader={started}
+            type="submit"
+            text='Расчитать' />
         </form>
         <ul className={fibonacciStyle.lists_circle}>
           {arrNumber.length >= 1 && (arrNumber.map((list) => {

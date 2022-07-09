@@ -5,9 +5,11 @@ export const selectionSort = (
     arr: Array<TobjectText>,
     direction: Direction
 ) => {
-    const copy = [...arr]
+    
+    if(arr.length > 1) {
+        const copy = [...arr]
     let minIdx: number;
-    const arrCopy = []
+    const arrCopy = [];
 
     for (let i = 0; i < copy.length; i++) {
         minIdx = i;
@@ -35,17 +37,24 @@ export const selectionSort = (
                 arrCopy.push(JSON.parse(JSON.stringify(copy)));
             }
         }
-        const temp = copy[i];
+        
+        if (i == copy.length - 1) {
+            copy[copy.length - 1].style = ElementStates.Modified;
+            arrCopy.push(JSON.parse(JSON.stringify(copy)));
+        }
+        else {
+            const temp = copy[i];
         copy[minIdx].style = ElementStates.Modified;
         arrCopy.push(JSON.parse(JSON.stringify(copy)));
         copy[i] = copy[minIdx];
         copy[minIdx] = temp;
         copy[copy.length - 1].style = ElementStates.Default;
         arrCopy.push(JSON.parse(JSON.stringify(copy)));
-        if (i == copy.length - 1) {
-            copy[copy.length - 1].style = ElementStates.Modified;
-            arrCopy.push(JSON.parse(JSON.stringify(copy)));
+
         }
     }
     return arrCopy
+}
+else return [arr]
+   
 }
