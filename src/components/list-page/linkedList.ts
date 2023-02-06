@@ -82,7 +82,7 @@ export class LinkedList<T> implements ILinkedList {
             curr && (curr = curr.next);
         }
         if(prev && curr) {
-            curr.next == null;
+            curr.next = null;
             prev.next = curr.next;
         }
         this.size--;
